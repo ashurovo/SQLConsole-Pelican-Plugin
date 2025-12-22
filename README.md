@@ -2,7 +2,7 @@
 
 SQL Console adds a lightweight and fully integrated database query interface directly to your Pelican server management panel for quick maintenance tasks, debugging, or data retrieval.
 
-![SQL Console](https://s7.ezgif.com/tmp/ezgif-75e1bc140beb9fb8.gif)
+![SQL Console](https://68747470733a2f2f73372e657a6769662e636f6d2f746d702f657a6769662d3.tiiny.site/68747470733a2f2f73372e657a6769662e636f6d2f746d702f657a6769662d373565316263313430626562396662382e676966.gif)
 
 ## Usage
 
