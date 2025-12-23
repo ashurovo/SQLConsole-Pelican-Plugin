@@ -125,12 +125,14 @@ class SQLConsole extends Page
     private function getDatabaseConnection($dbId)
     {
         $database = Database::where('id', $dbId)->where('server_id', $this->server->id)->firstOrFail();
+     
         $host = $database->host;
-
+        $username = $database->username;
+     
         try {
-            $password = Crypt::decryptString($host->password);
+            $password = Crypt::decryptString($database->password);
         } catch (\Exception $e) {
-            $password = $host->password;
+            $password = $database->password;
         }
 
         Config::set("database.connections.dynamic_user_sql", [
@@ -138,7 +140,7 @@ class SQLConsole extends Page
             'host' => $host->host,
             'port' => $host->port,
             'database' => $database->database,
-            'username' => $host->username,
+            'username' => $username,
             'password' => $password,
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

@@ -6,7 +6,6 @@
     "description": "A secure, native database manager for Pelican.",
     "category": "plugin",
     "url": "https://github.com/ashurovo/SQLConsole-Pelican-Plugin",
-    "update_url": null,
     "namespace": "Ashurov\\SQLConsole",
     "class": "SQLConsolePlugin",
     "panels": null,
