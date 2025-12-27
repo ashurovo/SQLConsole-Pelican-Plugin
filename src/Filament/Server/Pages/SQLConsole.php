@@ -34,16 +34,23 @@ class SQLConsole extends Page
 
     public static function shouldRegisterNavigation(): bool
     {
-        return Filament::getCurrentPanel()->getId() === 'server';
+        if (Filament::getCurrentPanel()->getId() !== 'server') {
+            return false;
+        }
+        return Filament::getTenant()->databases()->exists();
     }
 
     public function mount(): void
     {
         $this->server = Filament::getTenant();
         $firstDb = $this->server->databases()->first();
+        
+        if (!$firstDb) {
+            return;
+        }
 
         $this->form->fill([
-            'database_id' => $firstDb?->id,
+            'database_id' => $firstDb->id,
             'custom_query' => "SELECT * FROM users LIMIT 10;",
         ]);
     }
