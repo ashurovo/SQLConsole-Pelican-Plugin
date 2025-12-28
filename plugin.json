@@ -2,7 +2,7 @@
     "id": "sqlconsole",
     "name": "SQLConsole",
     "author": "ashurov",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "A secure, native database manager for Pelican.",
     "category": "plugin",
     "url": "https://github.com/ashurovo/SQLConsole-Pelican-Plugin",

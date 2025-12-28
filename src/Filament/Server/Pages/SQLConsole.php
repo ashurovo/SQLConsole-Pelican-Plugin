@@ -29,6 +29,8 @@ class SQLConsole extends Page
     public $queryResults = null;
     public $queryError = null;
     public $queryTime = 0;
+    
+    public $tables = null; 
 
     public Server $server;
 
@@ -44,7 +46,7 @@ class SQLConsole extends Page
     {
         $this->server = Filament::getTenant();
         $firstDb = $this->server->databases()->first();
-        
+
         if (!$firstDb) {
             return;
         }
@@ -53,6 +55,7 @@ class SQLConsole extends Page
             'database_id' => $firstDb->id,
             'custom_query' => "SELECT * FROM users LIMIT 10;",
         ]);
+        $this->fetchTables();
     }
 
     public function form(Schema $schema): Schema
@@ -63,7 +66,11 @@ class SQLConsole extends Page
                     ->label('Target Database')
                     ->options(fn() => $this->server->databases()->pluck('database', 'id'))
                     ->required()
-                    ->native(false),
+                    ->native(false)
+                    ->live()
+                    ->afterStateUpdated(function () {
+                        $this->fetchTables();
+                    }),
                 
                 Textarea::make('custom_query')
                     ->label('SQL Query')
@@ -73,6 +80,30 @@ class SQLConsole extends Page
                     ->extraAttributes(['class' => 'font-mono text-sm']),
             ])
             ->statePath('data');
+    }
+
+    public function fetchTables(): void
+    {
+        $dbId = $this->data['database_id'] ?? null;
+        if (!$dbId) return;
+
+        try {
+            $pdo = $this->getDatabaseConnection($dbId);
+            $stmt = $pdo->prepare("SHOW TABLES");
+            $stmt->execute();
+            
+            $this->tables = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+            
+        } catch (\Exception $e) {
+            Notification::make()->title('Could not list tables')->body($e->getMessage())->danger()->send();
+            $this->tables = [];
+        }
+    }
+
+    public function selectTable(string $tableName): void
+    {
+        $this->data['custom_query'] = "SELECT * FROM `{$tableName}` LIMIT 100;";
+        $this->runQuery();
     }
 
     public function runQuery(): void

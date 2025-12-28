@@ -17,6 +17,27 @@
         </div>
     </x-filament::section>
 
+    @if(!is_null($tables))
+        <x-filament::section>
+            <x-slot name="heading">Database Tables</x-slot>
+            
+            @if(count($tables) > 0)
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                    @foreach($tables as $table)
+                        <button 
+                            wire:click="selectTable('{{ $table }}')"
+                            class="px-3 py-2 text-xs font-mono bg-gray-100 dark:bg-gray-800 hover:bg-primary-500 hover:text-white border border-gray-200 dark:border-gray-700 rounded transition text-left truncate"
+                            title="Query {{ $table }}">
+                            {{ $table }}
+                        </button>
+                    @endforeach
+                </div>
+            @else
+                <div class="text-gray-500 text-sm italic">No tables found in this database.</div>
+            @endif
+        </x-filament::section>
+    @endif
+
     @if($queryError)
         <div class="p-4 rounded-xl bg-danger-50 dark:bg-danger-500/10 border border-danger-200 dark:border-danger-500/20 text-danger-700 dark:text-danger-400">
             <div class="flex items-center gap-2 font-bold mb-1">
